@@ -9,6 +9,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -24,7 +26,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner spinner;
     private MaterialButton startGame;
     private EditText textInput;
-    private TextView correctText, gameOverText, seconds, timeLeft;
+    private TextView correctText, gameOverText, seconds, timeLeft, words, score;
+
+    private final String[] wordTexts = {"Boiler", "Javascript", "Boiler", "Milk", "Fresh", "Yoghurt",
+            "Parse", "Conclude", "Kitchen", "Cook", "Home", "Random", "Language", "Find", "Seek", "Saw", "Return"};
+    int scoreCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,14 +44,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         gameOverText = findViewById(R.id.game_over);
         seconds = findViewById(R.id.seconds);
         timeLeft = findViewById(R.id.time);
+        words = findViewById(R.id.words);
+        score = findViewById(R.id.score_count);
 
         correctText.setVisibility(View.INVISIBLE);
         gameOverText.setVisibility(View.INVISIBLE);
 
         startGame.setOnClickListener(view -> {
+            words.setText(wordTexts[(int) Math.round(Math.random() * 16)]);
             startGame.setVisibility(View.INVISIBLE);
             textInput.setEnabled(true);
-            textInput.setBackgroundTintList(getResources().getColorStateList(R.color.white));
+            textInput.setBackgroundTintList(getResources().getColorStateList(Color.WHITE));
             textInput.setFocusable(true);
             InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
@@ -55,6 +64,32 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         spinner.setOnItemSelectedListener(this);
 
+        checkMatch();
+    }
+
+    public void checkMatch() {
+        textInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().equals(words.getText().toString())) {
+                    resetGame();
+                    scoreCount++;
+                    score.setText(String.valueOf(scoreCount));
+                    words.setText(wordTexts[(int) Math.round(Math.random() * 16)]);
+                    correctText.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
     }
 
     @Override
@@ -91,6 +126,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     handler.removeCallbacks(this);
                     startGame.setVisibility(View.VISIBLE);
                     gameOverText.setVisibility(View.VISIBLE);
+                    correctText.setVisibility(View.INVISIBLE);
                     textInput.setEnabled(false);
                     textInput.setBackgroundTintList(getResources().getColorStateList(R.color.input_disable));
                     Toast.makeText(MainActivity.this, "Game over", Toast.LENGTH_SHORT).show();
@@ -121,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             timeLeft.setText("2");
             gameOverText.setVisibility(View.INVISIBLE);
         }
+        textInput.getText().clear();
+        score.setText("0");
     }
 
     @Override

@@ -6,7 +6,7 @@
         <item>Medium</item>
         <item>Hard</item>
     </string-array>
-    <string name="type_message1">Type the given amount of words within</string>
+    <string name="type_message1">Type the given words within</string>
     <string name="type_message2">seconds</string>
     <string name="button_text">Start Game</string>
     <string name="time_left">Time Left:</string>
