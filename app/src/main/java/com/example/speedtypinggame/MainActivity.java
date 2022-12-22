@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             words.setText(wordTexts[(int) Math.round(Math.random() * 16)]);
             startGame.setVisibility(View.INVISIBLE);
             textInput.setEnabled(true);
-            textInput.setBackgroundTintList(getResources().getColorStateList(Color.WHITE));
+            textInput.setBackgroundTintList(getResources().getColorStateList(R.color.white));
             textInput.setFocusable(true);
             InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
