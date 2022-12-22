@@ -1,10 +1,10 @@
 package com.example.speedtypinggame;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -13,10 +13,18 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText, userName;
     private Button register;
     private TextView login;
     private ProgressBar progressBar;
@@ -29,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirm_password);
+        userName = findViewById(R.id.user_name);
         login = findViewById(R.id.login);
         register = findViewById(R.id.btn);
         progressBar = findViewById(R.id.progress);
@@ -38,14 +47,22 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         register.setOnClickListener(view -> createUser());
+
     }
 
     public void createUser() {
         String emailText = emailEditText.getText().toString();
         String passwordText = passwordEditText.getText().toString();
         String confirmPasswordText = confirmPasswordEditText.getText().toString();
+        String userNameText = userName.getText().toString();
 
-        boolean isValidated = validateUser(emailText, passwordText, confirmPasswordText);
+        Map<String, Object> users = new HashMap<>();
+
+        users.put("email", emailText);
+        users.put("password", passwordText);
+        users.put("username", userNameText);
+
+        boolean isValidated = validateUser(emailText, passwordText, confirmPasswordText, userNameText);
 
         if (!isValidated) {
             return;
@@ -54,22 +71,66 @@ public class RegisterActivity extends AppCompatActivity {
         showProgress(true);
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
+                .setDisplayName(userNameText).build();
+
 
         firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
                 Utility.makeToast(RegisterActivity.this, task.getException().getLocalizedMessage());
+                showProgress(false);
+                return;
             }
 
-            Utility.makeToast(RegisterActivity.this, "Registration successful");
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-            finish();
+            user.updateProfile(userProfileChangeRequest).addOnCompleteListener(userTask -> {
+                if (!userTask.isSuccessful()) {
+                    Utility.makeToast(RegisterActivity.this, userTask.getException().getLocalizedMessage());
+                    showProgress(false);
+                    return;
+                }
+
+                firebaseFirestore.collection("Users").document(Objects.requireNonNull(user.getDisplayName())).get().addOnCompleteListener(usernameTask -> {
+                    DocumentSnapshot documentSnapshot = usernameTask.getResult();
+
+                    if(documentSnapshot.exists()) {
+                        Utility.makeToast(RegisterActivity.this,"Username already exist");
+                        user.delete().addOnCompleteListener(c -> {
+                            if (c.isSuccessful()) {
+                                Log.d("MY_DOC", "Account deleted");
+                            }
+                        });
+                        showProgress(false);
+                        return;
+                    }
+
+                    firebaseFirestore.collection("Users").document(userNameText).set(users).addOnCompleteListener(usernameTask1 -> {
+                        if (!usernameTask1.isSuccessful()) {
+                            Utility.makeToast(RegisterActivity.this, usernameTask.getException().getLocalizedMessage());
+                            return;
+                        }
+
+                        Utility.makeToast(RegisterActivity.this, "Registration successful");
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        finish();
+                    });
+                });
+            });
+
         });
     }
 
-    public boolean validateUser(String email, String password, String confirmPassword) {
+    public boolean validateUser(String email, String password, String confirmPassword, String username) {
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailEditText.setError("Email is invalid");
+            return false;
+        }
+
+        if (username.length() < 0) {
+            userName.setError("Username is required");
             return false;
         }
 
@@ -90,9 +151,9 @@ public class RegisterActivity extends AppCompatActivity {
         if (!show) {
             register.setVisibility(View.VISIBLE);
             progressBar.setVisibility(View.GONE);
+        } else {
+            register.setVisibility(View.GONE);
+            progressBar.setVisibility(View.VISIBLE);
         }
-
-        register.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
     }
 }
