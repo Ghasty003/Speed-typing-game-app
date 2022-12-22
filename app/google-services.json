@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "701273460433",
+    "project_id": "speed-typing-game-7a71d",
+    "storage_bucket": "speed-typing-game-7a71d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701273460433:android:3f3284ec8926471adc7ff0",
+        "android_client_info": {
+          "package_name": "com.example.speedtypinggame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701273460433-ionk2on9joct7sva7378a571to6kgq0f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAlLsXXqVP1i34oN-RdUlwfEwOtZIp7Wc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701273460433-ionk2on9joct7sva7378a571to6kgq0f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
