@@ -11,4 +11,5 @@
     <string name="button_text">Start Game</string>
     <string name="time_left">Time Left:</string>
     <string name="score">Score:</string>
+    <string name="splash_text">How fast are you?</string>
 </resources>
