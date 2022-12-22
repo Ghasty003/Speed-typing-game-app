@@ -12,4 +12,6 @@
     <string name="time_left">Time Left:</string>
     <string name="score">Score:</string>
     <string name="splash_text">How fast are you?</string>
+    <string name="welcome">Welcome</string>
+    <string name="register_account">Register your account</string>
 </resources>
