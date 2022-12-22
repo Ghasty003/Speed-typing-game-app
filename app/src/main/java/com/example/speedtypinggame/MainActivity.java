@@ -50,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         correctText.setVisibility(View.INVISIBLE);
         gameOverText.setVisibility(View.INVISIBLE);
 
+        seconds.setTextColor(getResources().getColor(R.color.dodger));
+
         startGame.setOnClickListener(view -> {
             words.setText(wordTexts[(int) Math.round(Math.random() * 16)]);
             startGame.setVisibility(View.INVISIBLE);
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 seconds.setText("2");
                 timeLeft.setText("2");
                 break;
+
         }
     }
 

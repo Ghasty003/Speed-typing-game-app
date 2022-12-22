@@ -28,17 +28,17 @@
             android:textColor="@color/white"
             android:layout_centerVertical="true"
             />
+
         <TextView
             android:id="@+id/seconds"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="5"
-            android:textColor="@color/white"
-            android:layout_toEndOf="@+id/text_1"
             android:layout_centerVertical="true"
-            android:textSize="20sp"
             android:layout_marginStart="5dp"
-            />
+            android:layout_toEndOf="@+id/text_1"
+            tools:text="5"
+            android:textColor="@color/white"
+            android:textSize="20sp" />
 
     </RelativeLayout>
 
