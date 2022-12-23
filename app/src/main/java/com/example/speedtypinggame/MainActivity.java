@@ -14,6 +14,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -28,6 +29,9 @@ import android.widget.Toast;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
@@ -93,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         logout.setOnClickListener(view -> {
             logUserOut();
         });
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        String email = Objects.requireNonNull(user).getEmail();
+        String displayName = Objects.requireNonNull(user).getDisplayName();
+        Log.d("MY_DOC", email);
+        Log.d("MY_DOC", displayName);
 
         checkMatch();
     }
