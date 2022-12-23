@@ -97,21 +97,37 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         spinner.setOnItemSelectedListener(this);
 
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
-        Utility.makeLog(RegisterActivity.userName.getText().toString());
-        username.setText(RegisterActivity.userName.getText().toString());
+        if (user != null) {
+            firebaseFirestore.collection("Users").document(user.getEmail()).get().addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
+                    return;
+                }
 
-//        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+                DocumentSnapshot documentSnapshot = task.getResult();
 
-//        firebaseFirestore.collection("Users").document();
+                username.setText(documentSnapshot.getString("username"));
+            });
+        }
+
 
         logout.setOnClickListener(view -> {
             logUserOut();
         });
 
         checkMatch();
+    }
+
+    public static void saveUserName(String username, FirebaseUser user) {
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+        if (user != null) {
+
+        }
+
     }
 
     public void checkMatch() {

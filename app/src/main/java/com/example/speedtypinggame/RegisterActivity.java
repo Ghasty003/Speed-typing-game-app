@@ -87,35 +87,21 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             new UserProfileChangeRequest.Builder().setDisplayName(userNameText).build();
+            Utility.makeToast(RegisterActivity.this, "Registration successful");
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish();
+            firebaseFirestore.collection("Users").document(emailText).set(users)
+                    .addOnCompleteListener(setTask -> {
+                        if (!setTask.isSuccessful()) {
+                            Utility.makeToast(RegisterActivity.this, setTask.getException().getLocalizedMessage());
+                            showProgress(false);
+                            return;
+                        }
 
-            firebaseFirestore.collection("Users").document(userNameText).get().addOnCompleteListener(getTask -> {
-                if (!getTask.isSuccessful()) {
-                    Utility.makeToast(RegisterActivity.this, getTask.getException().getLocalizedMessage());
-                    showProgress(false);
-                    return;
-                }
-
-                DocumentSnapshot documentSnapshot = getTask.getResult();
-
-                if (documentSnapshot.exists()) {
-                    Utility.makeToast(RegisterActivity.this, "Username already exist");
-                    showProgress(false);
-                    return;
-                }
-
-                firebaseFirestore.collection("Users").document(userNameText).set(users)
-                        .addOnCompleteListener(setTask -> {
-                    if (!setTask.isSuccessful()) {
-                        Utility.makeToast(RegisterActivity.this, setTask.getException().getLocalizedMessage());
-                        showProgress(false);
-                        return;
-                    }
-
-                    Utility.makeToast(RegisterActivity.this, "Registration successful");
-                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                    finish();
-                });
-            });
+                        Utility.makeToast(RegisterActivity.this, "Registration successful");
+                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                        finish();
+                    });
 
         });
     }
