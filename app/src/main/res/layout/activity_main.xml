@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,163 +8,177 @@
     android:background="@color/background"
     >
 
-    <include android:id="@+id/top_bar" layout="@layout/topbar" />
-
     <RelativeLayout
-        android:id="@+id/relative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/top_bar"
-        android:layout_marginTop="60dp"
-        android:layout_marginHorizontal="10dp"
-        android:gravity="center"
-        >
+        android:layout_height="match_parent">
+        <include android:id="@+id/top_bar" layout="@layout/topbar" />
+
+        <RelativeLayout
+            android:id="@+id/relative"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/top_bar"
+            android:layout_marginTop="60dp"
+            android:layout_marginHorizontal="10dp"
+            android:gravity="center"
+            >
+            <TextView
+                android:id="@+id/text_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/type_message1"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:layout_centerVertical="true"
+                />
+
+            <TextView
+                android:id="@+id/seconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/text_1"
+                tools:text="5"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+
         <TextView
-            android:id="@+id/text_1"
+            android:id="@+id/text_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/type_message1"
+            android:text="@string/type_message2"
             android:textSize="20sp"
             android:textColor="@color/white"
-            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/relative"
             />
 
         <TextView
-            android:id="@+id/seconds"
+            android:id="@+id/words"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/text_1"
-            tools:text="5"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:layout_below="@+id/text_2"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="Word"
+            android:textColor="@color/dodger"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/text_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/type_message2"
-        android:textSize="20sp"
-        android:textColor="@color/white"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/relative"
-        />
-
-    <TextView
-        android:id="@+id/words"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/text_2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:text="Word"
-        android:textColor="@color/dodger"
-        android:textSize="30sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/text_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/words"
-        android:layout_marginHorizontal="30dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/rounded"
-        android:backgroundTint="@color/input_disable"
-        android:enabled="false"
-        android:gravity="center"
-        android:hint="Start Typing..."
-        android:inputType="text"
-        android:padding="10dp" />
-
-    <TextView
-        android:id="@+id/correct_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Correct!"
-        android:textSize="16dp"
-        android:textColor="@color/correct"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_below="@+id/text_input"
-    />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/start_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Game"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/dodger"
-        android:layout_below="@+id/correct_text"
-        android:layout_centerInParent="true"
-        android:padding="8dp"
-    />
-
-    <TextView
-        android:id="@+id/game_over"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Game Over!"
-        android:textSize="16sp"
-        android:textColor="#E80F0F"
-        android:layout_below="@id/start_btn"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="10dp"
-    />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/game_over"
-        >
-        <TextView
-            android:id="@+id/time_left"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/text_input"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/time_left"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:layout_marginStart="30dp"
-        />
-        <TextView
-            android:id="@+id/time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-            android:layout_toRightOf="@id/time_left"
-            android:layout_marginStart="5dp"
-        />
+            android:layout_below="@+id/words"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounded"
+            android:backgroundTint="@color/input_disable"
+            android:enabled="false"
+            android:gravity="center"
+            android:hint="Start Typing..."
+            android:inputType="text"
+            android:padding="10dp" />
 
         <TextView
-            android:id="@+id/score"
+            android:id="@+id/correct_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginRight="50dp"
-            android:text="@string/score"
-            android:textColor="@color/white"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/score_count"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginHorizontal="35dp"
-            android:text="0"
-            android:textSize="18sp"
-            android:textColor="@color/white"
-
+            android:text="Correct!"
+            android:textSize="16dp"
+            android:textColor="@color/correct"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:layout_below="@+id/text_input"
             />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/start_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Game"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/dodger"
+            android:layout_below="@+id/correct_text"
+            android:layout_centerInParent="true"
+            android:padding="8dp"
+            />
+
+        <TextView
+            android:id="@+id/game_over"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Game Over!"
+            android:textSize="16sp"
+            android:textColor="#E80F0F"
+            android:layout_below="@id/start_btn"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/game_over"
+            >
+            <TextView
+                android:id="@+id/time_left"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_left"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginStart="30dp"
+                />
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_toRightOf="@id/time_left"
+                android:layout_marginStart="5dp"
+                />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="50dp"
+                android:text="@string/score"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/score_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="35dp"
+                android:text="0"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+
+                />
+
+        </RelativeLayout>
+
     </RelativeLayout>
 
-</RelativeLayout>
+    <com.google.android.material.navigation.NavigationView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:headerLayout="@layout/header"
+        android:background="@color/background"
+        android:layout_gravity="start"
+    />
+
+
+</androidx.drawerlayout.widget.DrawerLayout>
