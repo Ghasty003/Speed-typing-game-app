@@ -74,9 +74,6 @@ public class RegisterActivity extends AppCompatActivity {
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        UserProfileChangeRequest userProfileChangeRequest = new UserProfileChangeRequest.Builder()
-                .setDisplayName(userNameText).build();
-
 
         firebaseAuth.createUserWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
             if (!task.isSuccessful()) {
@@ -85,39 +82,9 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            user.updateProfile(userProfileChangeRequest).addOnCompleteListener(userTask -> {
-                if (!userTask.isSuccessful()) {
-                    Utility.makeToast(RegisterActivity.this, userTask.getException().getLocalizedMessage());
-                    showProgress(false);
-                    return;
-                }
-
-                firebaseFirestore.collection("Users").document(Objects.requireNonNull(user.getDisplayName())).get().addOnCompleteListener(usernameTask -> {
-                    DocumentSnapshot documentSnapshot = usernameTask.getResult();
-
-                    if(documentSnapshot.exists()) {
-                        Utility.makeToast(RegisterActivity.this,"Username already exist");
-                        user.delete().addOnCompleteListener(c -> {
-                            if (c.isSuccessful()) {
-                                Log.d("MY_DOC", "Account deleted");
-                            }
-                        });
-                        showProgress(false);
-                        return;
-                    }
-
-                    firebaseFirestore.collection("Users").document(userNameText).set(users).addOnCompleteListener(usernameTask1 -> {
-                        if (!usernameTask1.isSuccessful()) {
-                            Utility.makeToast(RegisterActivity.this, usernameTask.getException().getLocalizedMessage());
-                            return;
-                        }
-
-                        Utility.makeToast(RegisterActivity.this, "Registration successful");
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        finish();
-                    });
-                });
-            });
+            Utility.makeToast(RegisterActivity.this, "Registration successful");
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish();
 
         });
     }
