@@ -30,6 +30,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Objects;
 
@@ -94,16 +95,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         spinner.setOnItemSelectedListener(this);
 
+
+
         logout.setOnClickListener(view -> {
             logUserOut();
         });
-
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        String email = Objects.requireNonNull(user).getEmail();
-        String displayName = Objects.requireNonNull(user).getDisplayName();
-        Log.d("MY_DOC", email);
-        Log.d("MY_DOC", displayName);
 
         checkMatch();
     }

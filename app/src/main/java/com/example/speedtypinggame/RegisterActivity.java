@@ -24,7 +24,7 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText, userName;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
     private Button register;
     private TextView login;
     private ProgressBar progressBar;
@@ -37,7 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
         confirmPasswordEditText = findViewById(R.id.confirm_password);
-        userName = findViewById(R.id.user_name);
         login = findViewById(R.id.login);
         register = findViewById(R.id.btn);
         progressBar = findViewById(R.id.progress);
@@ -54,15 +53,13 @@ public class RegisterActivity extends AppCompatActivity {
         String emailText = emailEditText.getText().toString();
         String passwordText = passwordEditText.getText().toString();
         String confirmPasswordText = confirmPasswordEditText.getText().toString();
-        String userNameText = userName.getText().toString();
 
         Map<String, Object> users = new HashMap<>();
 
         users.put("email", emailText);
         users.put("password", passwordText);
-        users.put("username", userNameText);
 
-        boolean isValidated = validateUser(emailText, passwordText, confirmPasswordText, userNameText);
+        boolean isValidated = validateUser(emailText, passwordText, confirmPasswordText);
 
         if (!isValidated) {
             return;
@@ -85,19 +82,13 @@ public class RegisterActivity extends AppCompatActivity {
             Utility.makeToast(RegisterActivity.this, "Registration successful");
             startActivity(new Intent(RegisterActivity.this, MainActivity.class));
             finish();
-
         });
     }
 
-    public boolean validateUser(String email, String password, String confirmPassword, String username) {
+    public boolean validateUser(String email, String password, String confirmPassword) {
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             emailEditText.setError("Email is invalid");
-            return false;
-        }
-
-        if (username.length() < 0) {
-            userName.setError("Username is required");
             return false;
         }
 
