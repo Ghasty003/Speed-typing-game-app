@@ -26,11 +26,10 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText, userName;
     private Button register;
     private TextView login;
     private ProgressBar progressBar;
-    static EditText userName;
 
 
     @Override
