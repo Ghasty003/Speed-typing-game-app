@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private MaterialButton startGame;
     private EditText textInput;
     private TextView correctText, gameOverText, seconds, timeLeft, words, score;
+    private ImageButton imageButton;
 
     private final String[] wordTexts = {"Boiler", "Javascript", "Boiler", "Milk", "Fresh", "Yoghurt",
             "Parse", "Conclude", "Kitchen", "Cook", "Home", "Random", "Language", "Find", "Seek", "Saw", "Return"};
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         timeLeft = findViewById(R.id.time);
         words = findViewById(R.id.words);
         score = findViewById(R.id.score_count);
+        imageButton = findViewById(R.id.image_btn);
 
         correctText.setVisibility(View.INVISIBLE);
         gameOverText.setVisibility(View.INVISIBLE);
