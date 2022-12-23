@@ -43,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progress);
 
         login.setOnClickListener(view -> {
-            //TODO go to login page.
+           startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         });
 
         register.setOnClickListener(view -> createUser());
