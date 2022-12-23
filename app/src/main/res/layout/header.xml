@@ -25,7 +25,7 @@
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="Ghasty"
+        android:text="John"
         android:textColor="@color/white"
         android:textSize="40sp"
         android:layout_centerHorizontal="true"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:text="HighScores"
         android:textColor="@color/white"
-        android:textSize="30dp"
+        android:textSize="25dp"
         android:layout_centerHorizontal="true"
         android:layout_below="@+id/user_name"
         android:layout_marginTop="90dp"
@@ -55,7 +55,7 @@
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Easy"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/white"
                 android:padding="10dp"
                 android:layout_weight="1"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:text="Medium"
                 android:layout_gravity="center"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/white"
                 android:padding="10dp"
                 android:layout_weight="1"
@@ -73,7 +73,7 @@
             <TextView android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hard"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/white"
                 android:padding="10dp"
                 android:layout_weight="1"
@@ -120,5 +120,18 @@
         </TableRow>
 
     </TableLayout>
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/top_bar"
+        android:text="Logout"
+        android:drawableLeft="@drawable/ic_baseline_login_24"
+        android:padding="13dp"
+    />
 
 </RelativeLayout>

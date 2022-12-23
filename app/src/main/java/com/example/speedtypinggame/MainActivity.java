@@ -2,7 +2,10 @@ package com.example.speedtypinggame;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -11,9 +14,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -21,17 +26,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     private Spinner spinner;
     private MaterialButton startGame;
     private EditText textInput;
     private TextView correctText, gameOverText, seconds, timeLeft, words, score;
     private ImageButton imageButton;
+    private Button logout;
 
     private final String[] wordTexts = {"Boiler", "Javascript", "Boiler", "Milk", "Fresh", "Yoghurt",
-            "Parse", "Conclude", "Kitchen", "Cook", "Home", "Random", "Language", "Find", "Seek", "Saw", "Return"};
+            "Parse", "Conclude", "Kitchen", "Cook", "Home", "Random", "Language", "Find", "Seek", "Saw", "Return", "View", "Parser", "Visible"};
     int scoreCount = 0;
 
     @Override
@@ -49,6 +59,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         words = findViewById(R.id.words);
         score = findViewById(R.id.score_count);
         imageButton = findViewById(R.id.image_btn);
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
+
+        View headerView = getLayoutInflater().inflate(R.layout.header, navigationView, false);
+        navigationView.addHeaderView(headerView);
+
+        imageButton.setOnClickListener(view -> {
+            drawerLayout.openDrawer(GravityCompat.START);
+        });
+
+        logout = headerView.findViewById(R.id.logout);
 
         correctText.setVisibility(View.INVISIBLE);
         gameOverText.setVisibility(View.INVISIBLE);
@@ -56,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         seconds.setTextColor(getResources().getColor(R.color.dodger));
 
         startGame.setOnClickListener(view -> {
-            words.setText(wordTexts[(int) Math.round(Math.random() * 16)]);
+            words.setText(wordTexts[(int) Math.round(Math.random() * 19)]);
             startGame.setVisibility(View.INVISIBLE);
             textInput.setEnabled(true);
             textInput.setBackgroundTintList(getResources().getColorStateList(R.color.white));
@@ -68,6 +89,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             resetGame();
         });
         spinner.setOnItemSelectedListener(this);
+
+        logout.setOnClickListener(view -> {
+            logUserOut();
+        });
 
         checkMatch();
     }
@@ -85,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     resetGame();
                     scoreCount++;
                     score.setText(String.valueOf(scoreCount));
-                    words.setText(wordTexts[(int) Math.round(Math.random() * 16)]);
+                    words.setText(wordTexts[(int) Math.round(Math.random() * 19)]);
                     correctText.setVisibility(View.VISIBLE);
                 }
             }
@@ -165,6 +190,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
         textInput.getText().clear();
         score.setText("0");
+    }
+
+    public void logUserOut() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        firebaseAuth.signOut();
+        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+        finish();
     }
 
     @Override
