@@ -52,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         firebaseAuth.signInWithEmailAndPassword(emailText, passwordText).addOnCompleteListener(task -> {
             if(!task.isSuccessful()) {
                 Utility.makeToast(LoginActivity.this, task.getException().getLocalizedMessage());
+                showProgress(false);
                 return;
             }
 

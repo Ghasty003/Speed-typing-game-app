@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.auth.User;
+import com.google.firestore.v1.UpdateDocumentRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,10 +26,12 @@ import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private EditText emailEditText, passwordEditText, confirmPasswordEditText, userName;
+    private EditText emailEditText, passwordEditText, confirmPasswordEditText;
     private Button register;
     private TextView login;
     private ProgressBar progressBar;
+    static EditText userName;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +86,36 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            Utility.makeToast(RegisterActivity.this, "Registration successful");
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-            finish();
+            new UserProfileChangeRequest.Builder().setDisplayName(userNameText).build();
+
+            firebaseFirestore.collection("Users").document(userNameText).get().addOnCompleteListener(getTask -> {
+                if (!getTask.isSuccessful()) {
+                    Utility.makeToast(RegisterActivity.this, getTask.getException().getLocalizedMessage());
+                    showProgress(false);
+                    return;
+                }
+
+                DocumentSnapshot documentSnapshot = getTask.getResult();
+
+                if (documentSnapshot.exists()) {
+                    Utility.makeToast(RegisterActivity.this, "Username already exist");
+                    showProgress(false);
+                    return;
+                }
+
+                firebaseFirestore.collection("Users").document(userNameText).set(users)
+                        .addOnCompleteListener(setTask -> {
+                    if (!setTask.isSuccessful()) {
+                        Utility.makeToast(RegisterActivity.this, setTask.getException().getLocalizedMessage());
+                        showProgress(false);
+                        return;
+                    }
+
+                    Utility.makeToast(RegisterActivity.this, "Registration successful");
+                    startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                    finish();
+                });
+            });
 
         });
     }

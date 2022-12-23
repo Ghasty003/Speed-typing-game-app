@@ -31,6 +31,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner spinner;
     private MaterialButton startGame;
     private EditText textInput;
-    private TextView correctText, gameOverText, seconds, timeLeft, words, score;
+    private TextView correctText, gameOverText, seconds, timeLeft, words, score, username;
     private ImageButton imageButton;
     private Button logout;
 
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         logout = headerView.findViewById(R.id.logout);
+        username = headerView.findViewById(R.id.user_name);
 
         correctText.setVisibility(View.INVISIBLE);
         gameOverText.setVisibility(View.INVISIBLE);
@@ -96,6 +98,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinner.setOnItemSelectedListener(this);
 
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        Utility.makeLog(RegisterActivity.userName.getText().toString());
+        username.setText(RegisterActivity.userName.getText().toString());
+
+//        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+
+//        firebaseFirestore.collection("Users").document();
 
         logout.setOnClickListener(view -> {
             logUserOut();
