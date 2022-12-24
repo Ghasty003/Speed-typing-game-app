@@ -65,6 +65,12 @@ public class RegisterActivity extends AppCompatActivity {
         users.put("password", passwordText);
         users.put("username", userNameText);
 
+        Map<String, Object> scores = new HashMap<>();
+
+        scores.put("Easy", 0);
+        scores.put("Medium", 0);
+        scores.put("Hard", 0);
+
         boolean isValidated = validateUser(emailText, passwordText, confirmPasswordText, userNameText);
 
         if (!isValidated) {
@@ -97,9 +103,17 @@ public class RegisterActivity extends AppCompatActivity {
                             return;
                         }
 
-                        Utility.makeToast(RegisterActivity.this, "Registration successful");
-                        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-                        finish();
+                        firebaseFirestore.collection("UserScores").document(emailText).set(scores).addOnCompleteListener(scoreTask -> {
+                            if (!scoreTask.isSuccessful()) {
+                                Utility.makeToast(RegisterActivity.this, scoreTask.getException().getLocalizedMessage());
+                                showProgress(false);
+                                return;
+                            }
+
+                            Utility.makeToast(RegisterActivity.this, "Registration successful");
+                            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+                            finish();
+                        });
                     });
 
         });
