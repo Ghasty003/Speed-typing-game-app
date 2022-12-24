@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private final String[] wordTexts = {"Boiler", "Javascript", "Boiler", "Milk", "Fresh", "Yoghurt",
             "Parse", "Conclude", "Kitchen", "Cook", "Home", "Random", "Language", "Find", "Seek", "Saw", "Return", "View", "Parser", "Visible"};
-    int scoreCount = 0;
+    private int scoreCount = 0;
 
     FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -102,11 +102,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             textInput.setEnabled(true);
             textInput.setBackgroundTintList(getResources().getColorStateList(R.color.white));
             textInput.setFocusable(true);
+            scoreCount = 0;
             InputMethodManager imm = (InputMethodManager) getSystemService(this.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,InputMethodManager.HIDE_IMPLICIT_ONLY);
 
             decrementTime();
-            resetGame();
         });
         spinner.setOnItemSelectedListener(this);
 
@@ -168,10 +168,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     correctText.setVisibility(View.VISIBLE);
                 }
             }
-
             @Override
             public void afterTextChanged(Editable editable) {
-
             }
         });
     }
@@ -241,17 +239,48 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                 if (value != null && value.exists()) {
                     String mediumScore = value.getString("Medium");
 
-                    Map<String, Object> easy = new HashMap<>();
+                    Map<String, Object> medium = new HashMap<>();
 
                     if (scoreCount > Integer.parseInt(mediumScore)) {
-                        easy.put("Medium", String.valueOf(scoreCount));
-                        firebaseFirestore.collection("UserScores").document(user.getEmail()).update(easy).addOnCompleteListener(task -> {
+                        medium.put("Medium", String.valueOf(scoreCount));
+                        firebaseFirestore.collection("UserScores").document(user.getEmail()).update(medium).addOnCompleteListener(task -> {
                             if (!task.isSuccessful()) {
                                 Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
                                 return;
                             }
 
                             Utility.makeToast(MainActivity.this, "Medium score updated, new Highscore recorded.");
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    public void hardGame() {
+
+        if (user != null) {
+
+            firebaseFirestore.collection("UserScores").document(user.getEmail()).addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Utility.makeToast(MainActivity.this, error.getLocalizedMessage());
+                    return;
+                }
+
+                if (value != null && value.exists()) {
+                    String hardScore = value.getString("Hard");
+
+                    Map<String, Object> hard = new HashMap<>();
+
+                    if (scoreCount > Integer.parseInt(hardScore)) {
+                        hard.put("Hard", String.valueOf(scoreCount));
+                        firebaseFirestore.collection("UserScores").document(user.getEmail()).update(hard).addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
+                                return;
+                            }
+
+                            Utility.makeToast(MainActivity.this, "Hard score updated, new Highscore recorded.");
                         });
                     }
                 }
@@ -278,9 +307,18 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     textInput.setEnabled(false);
                     textInput.setBackgroundTintList(getResources().getColorStateList(R.color.input_disable));
                     Toast.makeText(MainActivity.this, "Game over", Toast.LENGTH_SHORT).show();
-                    score.setText("0");
-                    easyGame();
-                    mediumGame();
+                    resetGame();
+                    switch (spinner.getSelectedItem().toString()) {
+                        case "Easy":
+                            easyGame();
+                            break;
+                        case "Medium":
+                            mediumGame();
+                            break;
+                        case "Hard":
+                            hardGame();
+                            break;
+                    }
                 }
             }
         };
