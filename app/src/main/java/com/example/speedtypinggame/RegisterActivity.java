@@ -92,9 +92,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             new UserProfileChangeRequest.Builder().setDisplayName(userNameText).build();
-            Utility.makeToast(RegisterActivity.this, "Registration successful");
-            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-            finish();
             firebaseFirestore.collection("Users").document(emailText).set(users)
                     .addOnCompleteListener(setTask -> {
                         if (!setTask.isSuccessful()) {
