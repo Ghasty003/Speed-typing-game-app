@@ -67,9 +67,9 @@ public class RegisterActivity extends AppCompatActivity {
 
         Map<String, Object> scores = new HashMap<>();
 
-        scores.put("Easy", 0);
-        scores.put("Medium", 0);
-        scores.put("Hard", 0);
+        scores.put("Easy", "0");
+        scores.put("Medium", "0");
+        scores.put("Hard", "0");
 
         boolean isValidated = validateUser(emailText, passwordText, confirmPasswordText, userNameText);
 
