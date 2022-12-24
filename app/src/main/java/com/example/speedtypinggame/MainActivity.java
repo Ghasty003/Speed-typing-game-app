@@ -121,15 +121,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         checkMatch();
     }
 
-    public static void saveUserName(String username, FirebaseUser user) {
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
-        if (user != null) {
-
-        }
-
-    }
-
     public void checkMatch() {
         textInput.addTextChangedListener(new TextWatcher() {
             @Override
