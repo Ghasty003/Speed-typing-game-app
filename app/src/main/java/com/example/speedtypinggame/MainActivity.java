@@ -1,5 +1,6 @@
 package com.example.speedtypinggame;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -31,8 +32,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -42,13 +47,16 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private Spinner spinner;
     private MaterialButton startGame;
     private EditText textInput;
-    private TextView correctText, gameOverText, seconds, timeLeft, words, score, username;
+    private TextView correctText, gameOverText, seconds, timeLeft, words, score, username, easyScore, mediumScore, hardScore;
     private ImageButton imageButton;
     private Button logout;
 
     private final String[] wordTexts = {"Boiler", "Javascript", "Boiler", "Milk", "Fresh", "Yoghurt",
             "Parse", "Conclude", "Kitchen", "Cook", "Home", "Random", "Language", "Find", "Seek", "Saw", "Return", "View", "Parser", "Visible"};
     int scoreCount = 0;
+
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +85,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         logout = headerView.findViewById(R.id.logout);
         username = headerView.findViewById(R.id.user_name);
+        easyScore = headerView.findViewById(R.id.easy_score);
+        mediumScore = headerView.findViewById(R.id.medium_score);
+        hardScore = headerView.findViewById(R.id.hard_score);
+
+        setScore();
 
         correctText.setVisibility(View.INVISIBLE);
         gameOverText.setVisibility(View.INVISIBLE);
@@ -97,10 +110,8 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
         spinner.setOnItemSelectedListener(this);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
         if (user != null) {
+
             firebaseFirestore.collection("Users").document(user.getEmail()).get().addOnCompleteListener(task -> {
                 if (!task.isSuccessful()) {
                     Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
@@ -119,6 +130,25 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         checkMatch();
+    }
+
+
+    public void setScore() {
+        if (user != null) {
+            firebaseFirestore.collection("UserScores").document(user.getEmail()).addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Utility.makeToast(MainActivity.this, error.getLocalizedMessage());
+                    return;
+                }
+
+                if (value != null && value.exists()) {
+                    easyScore.setText(value.getString("Easy"));
+                    mediumScore.setText(value.getString("Medium"));
+                    hardScore.setText(value.getString("Hard"));
+                }
+            });
+
+        }
     }
 
     public void checkMatch() {
@@ -167,6 +197,69 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    public void easyGame() {
+
+        if (user != null) {
+
+            firebaseFirestore.collection("UserScores").document(user.getEmail()).addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Utility.makeToast(MainActivity.this, error.getLocalizedMessage());
+                    return;
+                }
+
+                if (value != null && value.exists()) {
+                    String easyScore = value.getString("Easy");
+
+                    Map<String, Object> easy = new HashMap<>();
+
+                    if (scoreCount > Integer.parseInt(easyScore)) {
+                        easy.put("Easy", String.valueOf(scoreCount));
+                        firebaseFirestore.collection("UserScores").document(user.getEmail()).update(easy).addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
+                                return;
+                            }
+
+                            Utility.makeToast(MainActivity.this, "Easy score updated, new Highscore recorded.");
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+    public void mediumGame() {
+
+        if (user != null) {
+
+            firebaseFirestore.collection("UserScores").document(user.getEmail()).addSnapshotListener((value, error) -> {
+                if (error != null) {
+                    Utility.makeToast(MainActivity.this, error.getLocalizedMessage());
+                    return;
+                }
+
+                if (value != null && value.exists()) {
+                    String mediumScore = value.getString("Medium");
+
+                    Map<String, Object> easy = new HashMap<>();
+
+                    if (scoreCount > Integer.parseInt(mediumScore)) {
+                        easy.put("Medium", String.valueOf(scoreCount));
+                        firebaseFirestore.collection("UserScores").document(user.getEmail()).update(easy).addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
+                                return;
+                            }
+
+                            Utility.makeToast(MainActivity.this, "Medium score updated, new Highscore recorded.");
+                        });
+                    }
+                }
+            });
+        }
+    }
+
+
     public void decrementTime() {
         Handler handler = new Handler(Looper.getMainLooper());
         Runnable runnable = new Runnable() {
@@ -185,6 +278,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                     textInput.setEnabled(false);
                     textInput.setBackgroundTintList(getResources().getColorStateList(R.color.input_disable));
                     Toast.makeText(MainActivity.this, "Game over", Toast.LENGTH_SHORT).show();
+                    score.setText("0");
+                    easyGame();
+                    mediumGame();
                 }
             }
         };
