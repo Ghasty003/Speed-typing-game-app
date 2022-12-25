@@ -218,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 return;
                             }
 
-                            Utility.makeToast(MainActivity.this, "Easy score updated, new Highscore recorded.");
+                            Utility.makeToast(MainActivity.this, "Easy score updated, new High score recorded.");
                         });
                     }
                 }
@@ -249,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 return;
                             }
 
-                            Utility.makeToast(MainActivity.this, "Medium score updated, new Highscore recorded.");
+                            Utility.makeToast(MainActivity.this, "Medium score updated, new High score recorded.");
                         });
                     }
                 }
@@ -280,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                                 return;
                             }
 
-                            Utility.makeToast(MainActivity.this, "Hard score updated, new Highscore recorded.");
+                            Utility.makeToast(MainActivity.this, "Hard score updated, new High score recorded.");
                         });
                     }
                 }
