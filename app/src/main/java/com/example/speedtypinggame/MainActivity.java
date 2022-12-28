@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
                         firebaseFirestore.collection("UserScores").document(user.getEmail()).update(easy).addOnCompleteListener(task -> {
                             if (!task.isSuccessful()) {
                                 Utility.makeToast(MainActivity.this, task.getException().getLocalizedMessage());
-                                 return;
+                                return;
                             }
 
                             Utility.makeToast(MainActivity.this, "Easy score updated, new High score recorded.");
